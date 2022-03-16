@@ -14,12 +14,13 @@ public class App {
         String translator = "";
         translator = bookContent.select("p:contains(Translator)").text();
         
-        if(translator.split(" ").length > 4){
-            bookChapter = bookChapter.replace(translator, "");
-            String[] temp = translator.split(" ");
-            translator = temp[0] + " " + temp[2];
+        //Temporary fix for when the translator includes brackets.
+        //TODO: find a more elegant solution.
+        if (translator.contains("[") || translator.contains("]")){
+            return "";
         }
-        else if(translator.split(" ").length > 2){
+        
+        if(translator.split(" ").length > 2){
             bookChapter = bookChapter.replace(translator, "");
             String[] temp = translator.split(" ");
             translator = temp[0] + " " + temp[1];
@@ -33,7 +34,13 @@ public class App {
     public String getProofreader(Elements bookContent){
         String proofreader = "";
         proofreader = bookContent.select("p:contains(Proofreader)").text();
-
+        
+        //Temporary fix for when the proofreader includes brackets.
+        //TODO: find a more elegant solution.
+        if (proofreader.contains("[") || proofreader.contains("]")){
+            return "";
+        }
+        
         if(proofreader.split(" ").length > 2){            
             bookChapter = bookChapter.replace(proofreader, "");
             String[] temp = proofreader.split(" ");
@@ -53,19 +60,19 @@ public class App {
 
         String bookTitle;
         
-        System.out.println("gittest");
-        System.out.println("test2");
         doc = Jsoup.connect(site).get();
         
         Element test = doc.getElementById("wp-manga-current-chap");
         bookContent = doc.getElementsByClass("reading-content");
         bookChapterNum = bookContent.first().getElementById("wp-manga-current-chap").attr("value"); //Find the attribute value. Which is typically the chapter number.
-        bookTitle = bookContent.select("b").first().text(); //select grabs the first <h3> found. 
+        bookTitle = bookContent.select("b").first().text(); //select grabs the first <b> found. 
         bookChapter = bookContent.text().replaceAll(bookTitle, "");
         
         
         
         System.out.println("Chapter: " + bookChapterNum);
+        //TODO fix titles. Sometimes it selects the name of the website.
+        //This happens because of the way I select the title on line 68.
         System.out.println("Title: " + bookTitle);
         System.out.println(getTranslator(bookContent) + " " + getProofreader(bookContent));
         System.out.println(bookChapter);
