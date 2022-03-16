@@ -53,7 +53,8 @@ public class App {
 
         String bookTitle;
         
-        
+        System.out.println("gittest");
+        System.out.println("test2");
         doc = Jsoup.connect(site).get();
         
         Element test = doc.getElementById("wp-manga-current-chap");
