@@ -25,7 +25,20 @@ class Scraper():
 
 
         return page_number
+    
+    def get_chapter_numbers(self, url: str) -> int:
+        page = self.get_page(url)
+        tbody = self.html_parser.get_elements('tbody', page)
+        tr = self.html_parser.get_elements('tr', tbody[1])
+        chapter_numbers = self.html_parser.get_chapter(tr[0])
+        
+        return chapter_numbers
 
 
 scraper = Scraper()
-print(scraper.get_page_numbers('https://www.novelupdates.com/series/a-sweet-girl-wont-be-fooled-by-the-villainess/'))
+url = 'https://www.novelupdates.com/series/the-grand-secretarys-pampered-wife/'
+print(scraper.get_page_numbers(url))
+numbers = scraper.get_chapter_numbers(url)
+print(numbers)
+#with open('test.html', 'w', encoding='utf-8') as out:
+#    out.write(scraper.get_chapter_numbers(url)[0])
